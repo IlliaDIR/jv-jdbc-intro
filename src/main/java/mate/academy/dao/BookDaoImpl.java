@@ -30,7 +30,7 @@ public class BookDaoImpl implements BookDao {
             }
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                book.setId(generatedKeys.getLong(1));
+                book.setId(generatedKeys.getObject(1, Long.class));
             }
             return book;
         } catch (SQLException e) {
@@ -58,8 +58,8 @@ public class BookDaoImpl implements BookDao {
     public List<Book> findAll() {
         String sql = "SELECT * FROM books";
         try (Connection connection = ConnectionUtil.getConnection();
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql)) {
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = statement.executeQuery();
             List<Book> books = new ArrayList<>();
             while (resultSet.next()) {
                 books.add(parseBook(resultSet));
@@ -104,7 +104,7 @@ public class BookDaoImpl implements BookDao {
 
     private Book parseBook(ResultSet resultSet) throws SQLException {
         Book book = new Book();
-        book.setId(resultSet.getLong("id"));
+        book.setId(resultSet.getObject("id", Long.class));
         book.setTitle(resultSet.getString("title"));
         book.setPrice(resultSet.getBigDecimal("price"));
         return book;

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import mate.academy.dao.BookDao;
-import mate.academy.dao.BookDaoImpl;
 import mate.academy.lib.Injector;
 import mate.academy.model.Book;
 
@@ -13,7 +12,7 @@ public class Main {
             Injector.getInstance("mate.academy");
 
     public static void main(String[] args) {
-        BookDao bookDao = (BookDaoImpl) injector.getInstance(BookDao.class);
+        BookDao bookDao = (BookDao) injector.getInstance(BookDao.class);
 
         Book book = new Book();
         book.setTitle("Head First Java");
@@ -28,12 +27,9 @@ public class Main {
         Optional<Book> bookById = bookDao.findById(book.getId());
         System.out.println("Found book by id: " + book.getId() + ". The book: " + bookById);
 
-        Book newBook = new Book();
-        newBook.setId(1L);
-        newBook.setTitle("Java 8 in action");
-        newBook.setPrice(BigDecimal.valueOf(12.99));
-
-        Book updatedBook = bookDao.update(newBook);
+        createdBook.setTitle("Java 8 in action");
+        createdBook.setPrice(BigDecimal.valueOf(12.99));
+        Book updatedBook = bookDao.update(createdBook);
         System.out.println("Updated book: " + updatedBook);
 
         boolean isDeleted = bookDao.deleteById(book.getId());
